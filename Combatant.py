@@ -2,7 +2,7 @@
 import json 
 from collections import namedtuple
 
-from CombatSim import *
+from SimCombat import *
 
 
 abilities = 'str dex int wis con cha'
