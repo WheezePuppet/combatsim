@@ -25,3 +25,6 @@ def roll(string, enforced_min=1):
     return max(enforced_min,
         sum([randint(1,die_type) for _ in range(number)]) + modifier)
 
+# https://pythontips.com/2013/08/08/storing-and-loading-data-with-json/
+def jsonDefault(object):
+    return object.__dict__
