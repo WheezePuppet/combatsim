@@ -1,8 +1,10 @@
 
-import json 
+import json
+import logging
 from collections import namedtuple
 
 from SimCombat import *
+from BasicActions import *
 
 
 abilities = 'str dex int wis con cha'
@@ -10,6 +12,11 @@ AbilityScores = namedtuple('AbilityScores',abilities)
 
 
 class Combatant():
+
+    @classmethod
+    def from_filename(cls, name):
+        with open('combatants/{}.py'.format(name),"r") as f:
+            return Combatant(json.load(f))
 
     def __init__(self, stats):
 
@@ -31,6 +38,9 @@ class Combatant():
         self.ability_scores = AbilityScores._make(
             [stats[ability] for ability in abilities.split(' ')])
         self.hp = self.__compute_hp(stats['hp'])
+        self.actions = [
+            self.build_action(action) for action in self.action_strs]
+
 
     def __compute_hp(self, hp):
         if type(hp) is int:
@@ -48,14 +58,26 @@ class Combatant():
         return 'Combatant({})'.format(self.stats)
 
     def take_action(self, allies, enemies):
-        pass
+        random.choice(self.actions).execute(self,allies,enemies)
 
     def serialize(self, stream):
         '''Store a copy of this object's *static* information into the stream
         passed. This doesn't preserve instance-specific information about a
         *particular* kobold, just "the generic kobold stuff."'''
         json.dump(self.stats, stream, default=jsonDefault, indent=4)
-        
+
+    def build_action(self, action_str):
+        return eval(action_str)
+
+    def take_damage(self, dam_amt, dam_type):
+        self.hp = max(0, self.hp - dam_amt)
+        if self.hp <= 0:
+            logging.debug('{} DIES!'.format(self.name))
+        else:
+            logging.debug('Ouch!')
+
+    def is_dead(self):
+        return self.hp <= 0
 
 
 # Load a monster (kobold) from disk.
