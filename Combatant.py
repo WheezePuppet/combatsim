@@ -72,7 +72,7 @@ class Combatant():
     def take_damage(self, dam_amt, dam_type):
         self.hp = max(0, self.hp - dam_amt)
         if self.hp <= 0:
-            logging.debug('{} DIES!'.format(self.name))
+            logging.warning('{} DIES!'.format(self.name))
         else:
             logging.debug('Ouch!')
 

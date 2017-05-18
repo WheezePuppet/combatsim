@@ -3,7 +3,6 @@ import random
 import logging
 
 from SimCombat import *
-from IPython.core.debugger import Tracer
 
 
 class MeleeAttack():
@@ -18,11 +17,11 @@ class MeleeAttack():
         enemy = random.choice(enemies)
         if roll('d20{:+d}'.format(self.mod)) >= enemy.ac:
             dam_amt = roll(self.damage)
-            logging.debug('{} hits {}! for {} damage'.format(actor,
+            logging.info('{} hits {}! for {} damage'.format(actor,
                 enemy, dam_amt))
             enemy.take_damage(dam_amt, self.dam_type)
         else:
-            logging.debug('{} misses {}'.format(actor, enemy))
+            logging.info('{} misses {}'.format(actor, enemy))
 
     def __repr__(self):
         return 'MeleeAttack(mod={},reach={},damage="{}",dam_type="{}")'.format(
