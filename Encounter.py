@@ -28,16 +28,18 @@ class Encounter():
                 other_party = party.copy()
                 other_party.remove(character)
                 character.take_action(other_party, monsters)
-            if all([monster.is_dead() for monster in monsters]):
-                logging.critical("*** Party wins! :)")
+            monsters = [m for m in monsters if not m.is_dead()]
+            if len(monsters) == 0:
+                logging.error("*** Party wins! :)")
                 return True
 
             for monster in monsters:
                 other_monsters = monsters.copy()
                 other_monsters.remove(monster)
                 monster.take_action(other_monsters, party)
-            if all([character.is_dead() for character in party]):
-                logging.critical("*** Monsters win! :(")
+            party = [c for c in party if not c.is_dead()]
+            if len(party) == 0:
+                logging.error("*** Monsters win! :(")
                 return False
 
 
