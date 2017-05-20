@@ -74,7 +74,7 @@ class Combatant():
         if self.hp <= 0:
             logging.warning('{} DIES!'.format(self.name))
         else:
-            logging.debug('Ouch!')
+            logging.debug('Ouch! (now has {} HP)'.format(self.hp))
 
     def is_dead(self):
         return self.hp <= 0
