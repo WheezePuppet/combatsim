@@ -1,6 +1,7 @@
 
 from random import randint
 import logging
+import copy
 
 from Combatant import Combatant
 from SimCombat import roll
@@ -18,8 +19,8 @@ class Encounter():
         logging.getLogger().setLevel(logging_level)
         logging.info("Starting sim...")
 
-        party = self.party.copy()
-        monsters = self.monsters.copy()
+        party = copy.deepcopy(self.party)
+        monsters = copy.deepcopy(self.monsters)
 
         while (not all([character.is_dead() for character in party]) and
             not all([monster.is_dead() for monster in monsters])):
