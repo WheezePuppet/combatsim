@@ -24,6 +24,7 @@ class Encounter():
 
         while (not all([character.is_dead() for character in party]) and
             not all([monster.is_dead() for monster in monsters])):
+        logging.critical("simulating {}, {}".format(len(party),len(monsters)))
 
             for character in party:
                 other_party = party.copy()
