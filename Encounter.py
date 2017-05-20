@@ -5,6 +5,7 @@ import copy
 
 from Combatant import Combatant
 from SimCombat import roll
+from EncounterResults import EncounterResults
 
 
 class Encounter():
@@ -22,9 +23,8 @@ class Encounter():
         party = copy.deepcopy(self.party)
         monsters = copy.deepcopy(self.monsters)
 
-        while (not all([character.is_dead() for character in party]) and
-            not all([monster.is_dead() for monster in monsters])):
         logging.critical("simulating {}, {}".format(len(party),len(monsters)))
+        while len(party) > 0 and len(monsters) > 0:
 
             for character in party:
                 other_party = party.copy()
@@ -33,7 +33,7 @@ class Encounter():
             monsters = [m for m in monsters if not m.is_dead()]
             if len(monsters) == 0:
                 logging.error("*** Party wins! :)")
-                return True
+                return EncounterResults(len(party),len(monsters))
 
             for monster in monsters:
                 other_monsters = monsters.copy()
@@ -42,12 +42,15 @@ class Encounter():
             party = [c for c in party if not c.is_dead()]
             if len(party) == 0:
                 logging.error("*** Monsters win! :(")
-                return False
+                return EncounterResults(len(party),len(monsters))
+
+        return None   # This should never happen!
 
 
 def run_sample_encounter(party_size=2, num_monsters=3):
 
     party = [Combatant.from_filename('commoner') for _ in range(party_size)]
     monsters = [Combatant.from_filename('kobold') for _ in range(num_monsters)]
-    Encounter(party, monsters).simulate('INFO')
+    results = Encounter(party, monsters).simulate('DEBUG')
+    print(results)
 
