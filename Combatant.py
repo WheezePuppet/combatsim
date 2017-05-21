@@ -15,14 +15,14 @@ class Combatant():
             return Combatant(json.load(f))
 
     def __init__(self, stats):
-
         '''stats is a dictionary containing all static information about the
         type of creature, not specific information about an instance. For
         instance, all kobolds have '2d-6' hit points; therefore, the key/val
         pair "hp":"2d-6" will be in the "stats" dictionary. Any particular
         kobold may have (say) 5 HP, and therefore, that instance-specific
         value is computed by the code in this class, not handed to it via the
-        "stats" dictionary.'''
+        "stats" dictionary. That instance-specific information can be
+        re-computed via the method "incarnate()".'''
 
         # Save "stats" as an object attribute, just in case we want it to
         # serialize this object later. Then, copy each of its elements into
@@ -31,12 +31,18 @@ class Combatant():
         for key, value in stats.items():
             setattr(self, key, value)
 
-        self.hp = self.__compute_hp(stats['hp'])
         self.actions = [
             self.build_action(action) for action in self.action_strs]
 
+        self.incarnate()
 
-    def __compute_hp(self, hp):
+    def incarnate(self):
+        '''(Re-)roll all the instance-specific parameters for this object, so
+        that a fresh incarnation of this type of adventurer/monster exists.'''
+        self.hp = self._compute_hp(self.stats['hp'])
+        return self
+
+    def _compute_hp(self, hp):
         if type(hp) is int:
             return hp
         elif type(hp) is str:

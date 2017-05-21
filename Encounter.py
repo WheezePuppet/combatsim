@@ -20,8 +20,8 @@ class Encounter():
         logging.getLogger().setLevel(logging_level)
         logging.info("Starting sim...")
 
-        party = copy.deepcopy(self.party)
-        monsters = copy.deepcopy(self.monsters)
+        party = [character.incarnate() for character in self.party]
+        monsters = [monster.incarnate() for monster in self.monsters]
 
         logging.critical("simulating {}, {}".format(len(party),len(monsters)))
         while len(party) > 0 and len(monsters) > 0:
