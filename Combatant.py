@@ -7,10 +7,6 @@ from SimCombat import *
 from BasicActions import *
 
 
-abilities = 'str dex int wis con cha'
-AbilityScores = namedtuple('AbilityScores',abilities)
-
-
 class Combatant():
 
     @classmethod
@@ -35,8 +31,6 @@ class Combatant():
         for key, value in stats.items():
             setattr(self, key, value)
 
-        self.ability_scores = AbilityScores._make(
-            [stats[ability] for ability in abilities.split(' ')])
         self.hp = self.__compute_hp(stats['hp'])
         self.actions = [
             self.build_action(action) for action in self.action_strs]
