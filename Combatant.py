@@ -39,17 +39,11 @@ class Combatant():
     def incarnate(self):
         '''(Re-)roll all the instance-specific parameters for this object, so
         that a fresh incarnation of this type of adventurer/monster exists.'''
-        self.hp = self._compute_hp(self.stats['hp'])
+        for stat, val in self.stats.items():
+            if type(val) is str and roll_re.match(val):
+                print("the {} is a: {}".format(stat,roll(val)))
+                setattr(self, stat, roll(val))
         return self
-
-    def _compute_hp(self, hp):
-        if type(hp) is int:
-            return hp
-        elif type(hp) is str:
-            return roll(hp)
-        else:
-            print('Illegal hp type ', type(hp), '.', sep='')
-            exit(1)
 
     def __str__(self):
         return self.name + ' (' + str(self.hp) + ' HP)'

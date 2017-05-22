@@ -4,9 +4,13 @@ import re
 import logging
 
 
+roll_re = re.compile('(^[0-9]*d[0-9]+$)|(^[0-9]*d[0-9]+[+-][0-9]+$)')
 
 def roll(string, enforced_min=1):
     '''string is of the form "d8" or "d6+3" or "14d12-8"'''
+
+    if not roll_re.match(string):
+        raise ValueError('Invalid roll string: {}'.format(string))
 
     if string[0] == 'd':
         number = 1
