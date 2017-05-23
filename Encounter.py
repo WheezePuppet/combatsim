@@ -10,20 +10,22 @@ from EncounterResults import EncounterResults
 
 class Encounter():
 
+    total_num_simulations = 0
+
     def __init__(self, party, monsters, environment={}):
         self.party = party
         self.monsters = monsters
         self.environment = environment
 
-    def simulate(self, logging_level='DEBUG'):
+    def simulate(self):
 
-        logging.getLogger().setLevel(logging_level)
-        logging.info("Starting sim...")
+        Encounter.total_num_simulations += 1
+        logging.critical('Starting sim #{}...'.
+                                format(Encounter.total_num_simulations))
 
         party = [character.incarnate() for character in self.party]
         monsters = [monster.incarnate() for monster in self.monsters]
 
-        logging.critical("simulating {}, {}".format(len(party),len(monsters)))
         while len(party) > 0 and len(monsters) > 0:
 
             for character in party:
@@ -32,7 +34,7 @@ class Encounter():
                 character.take_action(other_party, monsters)
             monsters = [m for m in monsters if not m.is_dead()]
             if len(monsters) == 0:
-                logging.error("*** Party wins! :)")
+                logging.error('*** Party wins! :)')
                 return EncounterResults(len(party),len(monsters))
 
             for monster in monsters:
@@ -41,7 +43,7 @@ class Encounter():
                 monster.take_action(other_monsters, party)
             party = [c for c in party if not c.is_dead()]
             if len(party) == 0:
-                logging.error("*** Monsters win! :(")
+                logging.error('*** Monsters win! :(')
                 return EncounterResults(len(party),len(monsters))
 
         return None   # This should never happen!

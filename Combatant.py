@@ -52,6 +52,9 @@ class Combatant():
                 setattr(self, stat, roll(val))
         return self
 
+    def set_stat(self, key, value):
+        self.stats[key] = value
+
     def __str__(self):
         return self.name + str(self._id)
 
