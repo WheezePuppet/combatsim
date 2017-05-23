@@ -14,6 +14,8 @@ class Combatant():
         with open('combatants/{}.py'.format(name),"r") as f:
             return Combatant(json.load(f))
 
+    combatant_id = 0
+
     def __init__(self, stats):
         '''stats is a dictionary containing all static information about the
         type of creature, not specific information about an instance. For
@@ -36,6 +38,9 @@ class Combatant():
 
         self.incarnate()
 
+        self._id = Combatant.combatant_id
+        Combatant.combatant_id += 1
+
     def incarnate(self):
         '''(Re-)roll all the instance-specific parameters for this object, so
         that a fresh incarnation of this type of adventurer/monster exists.'''
@@ -46,7 +51,7 @@ class Combatant():
         return self
 
     def __str__(self):
-        return self.name + ' (' + str(self.hp) + ' HP)'
+        return self.name + str(self._id)
 
     def __repr__(self):
         return 'Combatant({})'.format(self.stats)
