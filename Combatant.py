@@ -46,7 +46,9 @@ class Combatant():
         that a fresh incarnation of this type of adventurer/monster exists.'''
         for stat, val in self.stats.items():
             if type(val) is str and roll_re.match(val):
-                print("the {} is a: {}".format(stat,roll(val)))
+                new_value = roll(val)
+                logging.debug("the {}, rolled from {}, is a: {}".format(
+                    stat, val, new_value))
                 setattr(self, stat, roll(val))
         return self
 
