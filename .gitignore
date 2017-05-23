@@ -87,3 +87,11 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# R files too
+.R*
+
+# Computed results
+*.pdf
+*.csv
+
