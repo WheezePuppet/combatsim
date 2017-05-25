@@ -32,7 +32,7 @@ class Encounter():
                 other_party = party.copy()
                 other_party.remove(character)
                 character.take_action(other_party, monsters)
-            monsters = [m for m in monsters if not m.is_dead()]
+                monsters = [m for m in monsters if not m.is_dead()]
             if len(monsters) == 0:
                 logging.error('*** Party wins! :)')
                 return EncounterResults(len(party),len(monsters))
@@ -41,7 +41,7 @@ class Encounter():
                 other_monsters = monsters.copy()
                 other_monsters.remove(monster)
                 monster.take_action(other_monsters, party)
-            party = [c for c in party if not c.is_dead()]
+                party = [c for c in party if not c.is_dead()]
             if len(party) == 0:
                 logging.error('*** Monsters win! :(')
                 return EncounterResults(len(party),len(monsters))

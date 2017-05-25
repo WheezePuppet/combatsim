@@ -14,14 +14,18 @@ class MeleeAttack():
         self.dam_type = dam_type
 
     def execute(self, actor, allies, enemies):
-        enemy = random.choice(enemies)
-        if roll('d20{:+d}'.format(self.mod)) >= enemy.ac:
-            dam_amt = roll(self.damage)
-            logging.info('{} hits {}! for {} damage'.format(actor,
-                enemy, dam_amt))
-            enemy.take_damage(dam_amt, self.dam_type)
+        if not enemies:
+            logging.debug('Nobody left to kill! Go get ice cream!')
+            pass
         else:
-            logging.info('{} misses {}'.format(actor, enemy))
+            enemy = random.choice(enemies)
+            if roll('d20{:+d}'.format(self.mod)) >= enemy.ac:
+                dam_amt = roll(self.damage)
+                logging.info('{} hits {}! for {} damage'.format(actor,
+                    enemy, dam_amt))
+                enemy.take_damage(dam_amt, self.dam_type)
+            else:
+                logging.info('{} misses {}'.format(actor, enemy))
 
     def __repr__(self):
         return 'MeleeAttack(mod={},reach={},damage="{}",dam_type="{}")'.format(
