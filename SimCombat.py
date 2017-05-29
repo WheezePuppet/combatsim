@@ -75,3 +75,6 @@ def log_meta(*args):
 
 def log_meta_detail(*args):
     logging.log(logging_levels['METADETAIL'], *args)
+
+def pr(alist):
+    print([str(i) for i in alist])
