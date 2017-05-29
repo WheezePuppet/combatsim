@@ -3,7 +3,7 @@ import logging
 import sys
 
 from SimCombat import *
-from ParameterSweep import run_sample_suite
+from ParameterSweep import run_sample_sweep
 
 if len(sys.argv) > 3:
     print('Usage: main.py [(' + '|'.join(reversed(logging_levels)) +
@@ -21,4 +21,4 @@ else:
     suite_size=1
 
 with open('results.csv','w') as f:
-    run_sample_suite(suite_size).to_csv(f, index=False)
+    run_sample_sweep(suite_size).to_csv(f, index=False)
