@@ -36,10 +36,11 @@ class Combatant():
         self.actions = [
             self.build_action(action) for action in self.action_strs]
 
-        self.incarnate()
-
         self._id = Combatant.combatant_id
         Combatant.combatant_id += 1
+
+        self.incarnate()
+
 
     def incarnate(self):
         '''(Re-)roll all the instance-specific parameters for this object, so
@@ -47,8 +48,8 @@ class Combatant():
         for stat, val in self.stats.items():
             if type(val) is str and roll_re.match(val):
                 new_value = roll(val)
-                log_incarnate("the {}, rolled from {}, is a: {}".format(
-                    stat, val, new_value))
+                log_incarnate("{}'s {}, rolled from {}, is a: {}".format(
+                    str(self), stat, val, new_value))
                 setattr(self, stat, roll(val))
         return self
 
@@ -76,9 +77,9 @@ class Combatant():
     def take_damage(self, dam_amt, dam_type):
         self.hp = max(0, self.hp - dam_amt)
         if self.hp <= 0:
-            log_death('{} DIES!'.format(self.name))
+            log_death('{} DIES!'.format(str(self)))
         else:
-            log_damage('Ouch! (now has {} HP)'.format(self.hp))
+            log_damage('Ouch! ({} now has {} HP)'.format(str(self), self.hp))
 
     def is_dead(self):
         return self.hp <= 0
