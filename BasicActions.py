@@ -1,6 +1,5 @@
 
 import random
-import logging
 
 from SimCombat import *
 
@@ -15,17 +14,17 @@ class MeleeAttack():
 
     def execute(self, actor, allies, enemies):
         if not enemies:
-            logging.debug('Nobody left to kill! Go get ice cream!')
+            log_noaction('Nobody left to kill! Go get ice cream!')
             pass
         else:
             enemy = random.choice(enemies)
             if roll('d20{:+d}'.format(self.mod)) >= enemy.ac:
                 dam_amt = roll(self.damage)
-                logging.info('{} hits {}! for {} damage'.format(actor,
+                log_action('{} hits {}! for {} damage'.format(actor,
                     enemy, dam_amt))
                 enemy.take_damage(dam_amt, self.dam_type)
             else:
-                logging.info('{} misses {}'.format(actor, enemy))
+                log_action('{} misses {}'.format(actor, enemy))
 
     def __repr__(self):
         return 'MeleeAttack(mod={},reach={},damage="{}",dam_type="{}")'.format(

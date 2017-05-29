@@ -4,6 +4,7 @@ import logging
 
 from Encounter import Encounter
 from Combatant import Combatant
+from SimCombat import *
 
 
 class Suite():
@@ -16,7 +17,7 @@ class Suite():
 
     def execute(self):
 
-        logging.info("Starting suite...")
+        log_meta("Starting suite...")
 
         results = [self._encounter.simulate() for _ in range(self._size)]
         return results

@@ -2,6 +2,7 @@
 from random import randint
 import re
 import logging
+import collections
 
 
 roll_re = re.compile('(^[0-9]*d[0-9]+$)|(^[0-9]*d[0-9]+[+-][0-9]+$)')
@@ -37,4 +38,40 @@ def roll(string, enforced_min=1):
 def jsonDefault(object):
     return object.__dict__
 
+logging_levels = collections.OrderedDict([
+    ('META', 30),
+    ('METADETAIL', 20),
+    ('DEATH', 18),
+    ('INCARNATE', 16),
+    ('ACTION', 15),
+    ('NOACTION', 14),
+    ('DAMAGE', 12),
+])
 
+logging.basicConfig(format='%(levelname)s:%(message)s')
+
+for level_name, level_value in logging_levels.items():
+    logging.addLevelName(level_value, level_name)
+#    setattr(logging, level_name.lower(),
+#        lambda *args : (lambda val : logging.log(val,*args)(level_value))(level_value))
+
+def log_death(*args):
+    logging.log(logging_levels['DEATH'], *args)
+
+def log_action(*args):
+    logging.log(logging_levels['ACTION'], *args)
+
+def log_noaction(*args):
+    logging.log(logging_levels['NOACTION'], *args)
+
+def log_damage(*args):
+    logging.log(logging_levels['DAMAGE'], *args)
+
+def log_incarnate(*args):
+    logging.log(logging_levels['INCARNATE'], *args)
+
+def log_meta(*args):
+    logging.log(logging_levels['META'], *args)
+
+def log_meta_detail(*args):
+    logging.log(logging_levels['METADETAIL'], *args)

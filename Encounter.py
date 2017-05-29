@@ -1,10 +1,9 @@
 
 from random import randint
-import logging
 import copy
 
 from Combatant import Combatant
-from SimCombat import roll
+from SimCombat import *
 from EncounterResults import EncounterResults
 
 
@@ -20,7 +19,7 @@ class Encounter():
     def simulate(self):
 
         Encounter.total_num_simulations += 1
-        logging.critical('Starting sim #{}...'.
+        log_meta('Starting sim #{}...'.
                                 format(Encounter.total_num_simulations))
 
         party = [character.incarnate() for character in self.party]
@@ -34,7 +33,7 @@ class Encounter():
                 character.take_action(other_party, monsters)
                 monsters = [m for m in monsters if not m.is_dead()]
             if len(monsters) == 0:
-                logging.error('*** Party wins! :)')
+                log_meta('*** Party wins! :)')
                 return EncounterResults(len(party),len(monsters))
 
             for monster in monsters:
@@ -43,7 +42,7 @@ class Encounter():
                 monster.take_action(other_monsters, party)
                 party = [c for c in party if not c.is_dead()]
             if len(party) == 0:
-                logging.error('*** Monsters win! :(')
+                log_meta('*** Monsters win! :(')
                 return EncounterResults(len(party),len(monsters))
 
         return None   # This should never happen!

@@ -1,6 +1,5 @@
 
 import json
-import logging
 from collections import namedtuple
 
 from SimCombat import *
@@ -47,7 +46,7 @@ class Combatant():
         for stat, val in self.stats.items():
             if type(val) is str and roll_re.match(val):
                 new_value = roll(val)
-                logging.debug("the {}, rolled from {}, is a: {}".format(
+                log_incarnate("the {}, rolled from {}, is a: {}".format(
                     stat, val, new_value))
                 setattr(self, stat, roll(val))
         return self
@@ -76,9 +75,9 @@ class Combatant():
     def take_damage(self, dam_amt, dam_type):
         self.hp = max(0, self.hp - dam_amt)
         if self.hp <= 0:
-            logging.warning('{} DIES!'.format(self.name))
+            log_death('{} DIES!'.format(self.name))
         else:
-            logging.debug('Ouch! (now has {} HP)'.format(self.hp))
+            log_damage('Ouch! (now has {} HP)'.format(self.hp))
 
     def is_dead(self):
         return self.hp <= 0

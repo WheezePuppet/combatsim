@@ -1,10 +1,13 @@
 
-from ParameterSweep import run_sample_suite
-import sys
 import logging
+import sys
+
+from SimCombat import *
+from ParameterSweep import run_sample_suite
 
 if len(sys.argv) > 3:
-    print("Usage: main.py [(DEBUG|INFO|WARNING|ERROR|CRITICAL)] [suite_size].")
+    print('Usage: main.py [(' + '|'.join(reversed(logging_levels)) +
+        ')] [suite_size].')
     sys.exit(1)
 
 if len(sys.argv) > 1:

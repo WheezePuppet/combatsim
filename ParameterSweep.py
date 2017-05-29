@@ -1,11 +1,11 @@
 
 from random import randint
-import logging
 import pandas as pd
 
 from Suite import Suite
 from Combatant import Combatant
 from Encounter import Encounter
+from SimCombat import *
 
 class ParameterSweep():
 
@@ -28,7 +28,7 @@ class ParameterSweep():
 
     def execute(self, suite_size=10):
 
-        logging.info('Starting sweep...')
+        log_meta('Starting sweep...')
         results = pd.DataFrame(columns=[
                             'combatant','param','value','party_win_freq'])
 
@@ -36,7 +36,7 @@ class ParameterSweep():
             for param, vals in params.items():
                 for val in vals:
                     combatant.set_stat(param, val)
-                    logging.info(' ...running suite for {!s}.{!s}={!s}...'.
+                    log_meta_detail(' ...running suite for {!s}.{!s}={!s}...'.
                         format(combatant, param, val))
                     suite = Suite(self._encounter, suite_size)
                     these_results = suite.execute()
