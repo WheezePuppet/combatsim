@@ -1,6 +1,7 @@
 
 from random import randint
 import copy
+import sys
 
 from Combatant import Combatant
 from SimCombat import *
@@ -25,25 +26,37 @@ class Encounter():
         party = [character.incarnate() for character in self.party]
         monsters = [monster.incarnate() for monster in self.monsters]
 
+        turn_order = party.copy()
+        turn_order.extend(monsters)
+        turn_order.sort(key= lambda c: c.initiative, reverse=True)
+
         while len(party) > 0 and len(monsters) > 0:
 
-            for character in party:
+            character = turn_order.pop(0)
+
+            if character in party:
                 other_party = party.copy()
                 other_party.remove(character)
                 character.take_action(other_party, monsters)
                 monsters = [m for m in monsters if not m.is_dead()]
-            if len(monsters) == 0:
-                log_meta('*** Party wins! :)')
-                return EncounterResults(len(party),len(monsters))
-
-            for monster in monsters:
+                if len(monsters) == 0:
+                    log_meta('*** Party wins! :)')
+                    return EncounterResults(len(party),len(monsters))
+            elif character in monsters:
                 other_monsters = monsters.copy()
-                other_monsters.remove(monster)
-                monster.take_action(other_monsters, party)
+                other_monsters.remove(character)
+                character.take_action(other_monsters, party)
                 party = [c for c in party if not c.is_dead()]
-            if len(party) == 0:
-                log_meta('*** Monsters win! :(')
-                return EncounterResults(len(party),len(monsters))
+                if len(party) == 0:
+                    log_meta('*** Monsters win! :(')
+                    return EncounterResults(len(party),len(monsters))
+            else:
+                print('{} not in either!'.format(str(character)))
+                sys.exit(1)
+
+            if not character.is_dead():
+                turn_order.append(character)
+            turn_order = [c for c in turn_order if not c.is_dead()]
 
         return None   # This should never happen!
 
