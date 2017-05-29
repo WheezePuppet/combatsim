@@ -17,7 +17,7 @@ class Suite():
 
     def execute(self):
 
-        log_meta("Starting suite...")
+        log_meta("Starting suite of {} simulations...".format(self._size))
 
         results = [self._encounter.simulate() for _ in range(self._size)]
         return results
