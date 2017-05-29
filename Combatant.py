@@ -7,6 +7,7 @@ from BasicActions import *
 
 
 class Combatant():
+    '''A participant in combat. This class is used for PCs and NPCs.'''
 
     @classmethod
     def from_filename(cls, name):
