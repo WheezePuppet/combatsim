@@ -35,7 +35,10 @@ class ParameterSweep():
         for combatant, params in self._sweep_params.items():
             for param, vals in params.items():
                 for val in vals:
-                    combatant.set_stat(param, val)
+                    if type(combatant) is tuple:
+                        [c.set_stat(param, val) for c in combatant]
+                    else:
+                        combatant.set_stat(param, val)
                     log_meta_detail(' ...running suite for {!s}.{!s}={!s}...'.
                         format(combatant, param, val))
                     suite = Suite(self._encounter, suite_size)
@@ -44,23 +47,26 @@ class ParameterSweep():
                             for r in these_results]
                     party_win_freq = sum(party_wins)/len(party_wins)
                     results = results.append(pd.DataFrame.from_records([{
-                        'combatant':combatant,
+                        'combatant':prstr(combatant),
                         'param':param,
                         'value':val,
                         'party_win_freq':party_win_freq}]))
         return results[['combatant','param','value','party_win_freq']]
 
 
-def run_sample_suite(suite_size=10):
+def run_sample_sweep(suite_size=10):
 
     party = [Combatant.from_filename('commoner') for _ in range(3)]
     monsters = [Combatant.from_filename('kobold') for _ in range(4)]
     encounter = Encounter(party, monsters)
 
-    commoner0 = party[0]
+    commoner1 = party[0]
+    commoner2 = party[1]
+    commoner3 = party[2]
 
-    sweep_params = {commoner0:{'hp':
-        ['1d6+'+str(mod) for mod in range(0,200)]}}
+    sweep_params = {
+        (commoner1,commoner2,commoner3):{'hp': ['d6+'+str(mod) for mod in range(0,80)]}}
+        #commoner1:{'hp': ['d6+'+str(mod) for mod in range(0,80)]}}
 
     return ParameterSweep(encounter, sweep_params).execute(suite_size)
 
