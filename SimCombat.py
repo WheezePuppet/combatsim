@@ -77,4 +77,15 @@ def log_meta_detail(*args):
     logging.log(logging_levels['METADETAIL'], *args)
 
 def pr(alist):
+    '''Print the str() representation of each element in the list. (Needed
+    because I'm being stupid at the moment.)'''
     print([str(i) for i in alist])
+
+def prstr(athing):
+    '''Return the str() representation of the thing passed. If it's a tuple,
+    return a string concatenating the elements. (Needed because I'm being 
+    stupid at the moment.)'''
+    if type(athing) is tuple:
+        return '('+','.join([str(i) for i in athing])+')'
+    else:
+        return(str(athing))
