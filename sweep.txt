@@ -1,0 +1,6 @@
+Party:
+commoner,3,hp:d6+(9-50)
+
+Monsters:
+kobold,4
+kobold,3
