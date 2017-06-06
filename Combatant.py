@@ -86,8 +86,8 @@ class Combatant():
 
 
 # Load a monster (kobold) from disk.
-with open("combatants/kobold.py","r") as f:
-    kobold = Combatant(json.load(f))
+#with open("combatants/kobold.py","r") as f:
+#    kobold = Combatant(json.load(f))
 
 # Here's some code to create a "starter" disk file, just for gigs.
 #absc = dict(AbilityScores._make([7,15,9,8,7,8])._asdict())
