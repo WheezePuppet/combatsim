@@ -62,11 +62,9 @@ def run_sample_sweep(suite_size=10):
 
     commoner1 = party[0]
     commoner2 = party[1]
-    commoner3 = party[2]
 
     sweep_params = {
-        (commoner1,commoner2,commoner3):{'hp': ['d6+'+str(mod) for mod in range(0,80)]}}
-        #commoner1:{'hp': ['d6+'+str(mod) for mod in range(0,80)]}}
+        (commoner1,commoner2):{'hp': ['d6+'+str(mod) for mod in range(0,80)]}}
 
     return ParameterSweep(encounter, sweep_params).execute(suite_size)
 
