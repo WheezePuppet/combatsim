@@ -19,6 +19,7 @@ class Encounter():
 
     def simulate(self):
 
+        Combatant.reset_ids()
         Encounter.total_num_simulations += 1
         log_meta('Starting sim #{}...'.
                                 format(Encounter.total_num_simulations))

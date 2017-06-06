@@ -14,6 +14,10 @@ class Combatant():
         with open('combatants/{}.py'.format(name),"r") as f:
             return Combatant(json.load(f))
 
+    @classmethod
+    def reset_ids(cls):
+        cls.combatant_id = 0
+
     combatant_id = 0
 
     def __init__(self, stats):
