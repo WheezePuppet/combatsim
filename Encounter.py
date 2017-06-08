@@ -24,9 +24,14 @@ class Encounter():
         log_meta('Starting sim #{}...'.
                                 format(Encounter.total_num_simulations))
 
-        party = [character.incarnate() for character in self.party]
-        monsters = [monster.incarnate() for monster in self.monsters]
+        party = [character.incarnate() 
+            for character in self.party for _ in range(character._quantity) ]
+        monsters = [monster.incarnate() 
+            for monster in self.monsters for _ in range(monster._quantity) ]
 
+        log_meta_detail('This fight features ' + 
+            ','.join([str(pm) for pm in party]) + ' vs. ' +
+            ','.join([str(m) for m in monsters]))
         turn_order = party.copy()
         turn_order.extend(monsters)
         turn_order.sort(key= lambda c: c.initiative, reverse=True)
@@ -64,8 +69,9 @@ class Encounter():
 
 def run_sample_encounter(party_size=2, num_monsters=3):
 
-    party = [Combatant.from_filename('commoner') for _ in range(party_size)]
-    monsters = [Combatant.from_filename('kobold') for _ in range(num_monsters)]
-    results = Encounter(party, monsters).simulate('DEBUG')
+    party = [Combatant.from_filename('commoner', party_size)]
+    monsters = [Combatant.from_filename('kobold', num_monsters)]
+
+    results = Encounter(party, monsters).simulate()
     print(results)
 

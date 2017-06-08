@@ -1,5 +1,6 @@
 
 import json
+import copy
 from collections import namedtuple
 
 from SimCombat import *
@@ -7,12 +8,14 @@ from BasicActions import *
 
 
 class Combatant():
-    '''A participant in combat. This class is used for PCs and NPCs.'''
+    '''A type of participant in combat. This class is used for PCs and NPCs.
+    To get an actual individual Combatant, call incarnate() on this object to
+    retrieve another.'''
 
     @classmethod
-    def from_filename(cls, name):
+    def from_filename(cls, name, quantity=1):
         with open('combatants/{}.py'.format(name),"r") as f:
-            return Combatant(json.load(f))
+            return Combatant(json.load(f), quantity)
 
     @classmethod
     def reset_ids(cls):
@@ -20,7 +23,7 @@ class Combatant():
 
     combatant_id = 0
 
-    def __init__(self, stats):
+    def __init__(self, stats, quantity=1):
         '''stats is a dictionary containing all static information about the
         type of creature, not specific information about an instance. For
         instance, all kobolds have '2d-6' hit points; therefore, the key/val
@@ -40,22 +43,33 @@ class Combatant():
         self.actions = [
             self.build_action(action) for action in self.action_strs]
 
-        self._id = Combatant.combatant_id
-        Combatant.combatant_id += 1
+        '''Kind of a hack; the quantity inst var represents the number of this
+        type of combatant to actually incarnate when a battle happens.'''
+        self._quantity = quantity
 
         self.incarnate()
 
 
     def incarnate(self):
+        '''Produce a clone of this object, with all individual stats rolled
+        for it, to actually participate in a combat.'''
+
+        incarnated = copy.deepcopy(self)
+
+        '''Assign a fresh id to this newly minted Combatant.'''
+        incarnated._id = Combatant.combatant_id
+        Combatant.combatant_id += 1
+
         '''(Re-)roll all the instance-specific parameters for this object, so
         that a fresh incarnation of this type of adventurer/monster exists.'''
-        for stat, val in self.stats.items():
+        for stat, val in incarnated.stats.items():
             if type(val) is str and roll_re.match(val):
                 new_value = roll(val)
                 log_incarnate("{}'s {}, rolled from {}, is a: {}".format(
-                    str(self), stat, val, new_value))
-                setattr(self, stat, roll(val))
-        return self
+                    str(incarnated), stat, val, new_value))
+                setattr(incarnated, stat, roll(val))
+        return incarnated
+
 
     def set_stat(self, key, value):
         self.stats[key] = value
