@@ -2,6 +2,7 @@
 import json
 import copy
 from collections import namedtuple
+import copy
 
 from SimCombat import *
 from BasicActions import *
@@ -43,33 +44,30 @@ class Combatant():
         self.actions = [
             self.build_action(action) for action in self.action_strs]
 
-        '''Kind of a hack; the quantity inst var represents the number of this
-        type of combatant to actually incarnate when a battle happens.'''
-        self._quantity = quantity
-
-        self.incarnate()
+        # self.incarnate()  Meh...actually, don't self-incarnate yet.
 
 
     def incarnate(self):
-        '''Produce a clone of this object, with all individual stats rolled
-        for it, to actually participate in a combat.'''
+        '''Actually produce an individual battle participator from this
+        template Combatant.'''
 
-        incarnated = copy.deepcopy(self)
+        # (Shallow copy of template okay. If stats ever need to be instance
+        # separate, we'll need to do deep copy.)
+        incarnated = copy.copy(self)  
 
-        '''Assign a fresh id to this newly minted Combatant.'''
         incarnated._id = Combatant.combatant_id
         Combatant.combatant_id += 1
 
         '''(Re-)roll all the instance-specific parameters for this object, so
         that a fresh incarnation of this type of adventurer/monster exists.'''
+        log_incarnate("------> incarnating {}...".format(str(incarnated)))
         for stat, val in incarnated.stats.items():
             if type(val) is str and roll_re.match(val):
                 new_value = roll(val)
-                log_incarnate("{}'s {}, rolled from {}, is a: {}".format(
+                log_incarnate("  {}'s {}, rolled from {}, is a: {}".format(
                     str(incarnated), stat, val, new_value))
                 setattr(incarnated, stat, roll(val))
         return incarnated
-
 
     def set_stat(self, key, value):
         self.stats[key] = value

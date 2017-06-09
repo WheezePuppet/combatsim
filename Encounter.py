@@ -1,5 +1,6 @@
 
 from random import randint
+from collections import defaultdict
 import copy
 import sys
 
@@ -13,8 +14,18 @@ class Encounter():
     total_num_simulations = 0
 
     def __init__(self, party, monsters, environment={}):
-        self.party = party
-        self.monsters = monsters
+        '''Create an encounter which can be simulated. "party" and "monsters"
+        can either be (a) lists of Combatants, or (b) dicts mapping Combatants
+        to quantities.'''
+
+        if type(party) is list:
+            self.party = { p:1 for p in party }
+        else:
+            self.party = party
+        if type(monsters) is list:
+            self.monsters = { m:1 for m in monsters }
+        else:
+            self.monsters = monsters
         self.environment = environment
 
     def simulate(self):
@@ -25,13 +36,16 @@ class Encounter():
                                 format(Encounter.total_num_simulations))
 
         party = [character.incarnate() 
-            for character in self.party for _ in range(character._quantity) ]
+            for character, quantity in self.party.items() 
+                for _ in range(quantity)]
+        log_meta_detail("  The party is: " +
+            ','.join([str(p) for p in party]))
         monsters = [monster.incarnate() 
-            for monster in self.monsters for _ in range(monster._quantity) ]
-
-        log_meta_detail('This fight features ' + 
-            ','.join([str(pm) for pm in party]) + ' vs. ' +
+            for monster, quantity in self.monsters.items() 
+                for _ in range(quantity)]
+        log_meta_detail("  The monsters are: " +
             ','.join([str(m) for m in monsters]))
+
         turn_order = party.copy()
         turn_order.extend(monsters)
         turn_order.sort(key= lambda c: c.initiative, reverse=True)
@@ -69,9 +83,8 @@ class Encounter():
 
 def run_sample_encounter(party_size=2, num_monsters=3):
 
-    party = [Combatant.from_filename('commoner', party_size)]
-    monsters = [Combatant.from_filename('kobold', num_monsters)]
-
+    party = {Combatant.from_filename('commoner'):party_size}
+    monsters = {Combatant.from_filename('kobold'):num_monsters}
     results = Encounter(party, monsters).simulate()
     print(results)
 
