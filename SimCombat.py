@@ -55,6 +55,9 @@ for level_name, level_value in logging_levels.items():
 #    setattr(logging, level_name.lower(),
 #        lambda *args : (lambda val : logging.log(val,*args)(level_value))(level_value))
 
+def log(level):
+    logging.getLogger().setLevel(level)
+
 def log_death(*args):
     logging.log(logging_levels['DEATH'], *args)
 
