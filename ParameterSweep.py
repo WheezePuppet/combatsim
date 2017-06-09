@@ -65,12 +65,7 @@ class ParameterSweep():
         for combatant, params in self._sweep_params.items():
             for param, vals in params.items():
                 for val in vals:
-                    if type(combatant) is tuple:
-                        [c.set_stat(param, val) for c in combatant]
-                    else:
-                        combatant.set_stat(param, val)
-                    log_meta_detail(' ...running suite for {!s}.{!s}={!s}...'.
-                        format(combatant, param, val))
+                    combatant.set_stat(param, val)
                     suite = Suite(self._encounter, suite_size)
                     these_results = suite.execute()
                     party_wins = [r.party_remaining > r.monsters_remaining
@@ -89,16 +84,15 @@ def instantiate_group(lines):
     sweep_params = {}
     for combatant in lines:
         combatant_parts = combatant.split(',')
-        these_combatants = [
-            Combatant.from_filename(combatant_parts[0])
-                for _ in range(int(combatant_parts[1]))]
-        group.extend(these_combatants)
+        this_combatant = Combatant.from_filename(combatant_parts[0],
+            int(combatant_parts[1]))
+        group.append(this_combatant)
         if len(combatant_parts) > 2:
             for param in combatant_parts[2:]:
                 param_parts = param.split(':')
                 sweep_params.update(
-                    {tuple(c for c in these_combatants):{
-                    param_parts[0]:build_pv_list(param_parts[1])}})
+                    { this_combatant : {
+                        param_parts[0]:build_pv_list(param_parts[1])}})
     return group, sweep_params
 
 

@@ -24,6 +24,9 @@ class Encounter():
         log_meta('Starting sim #{}...'.
                                 format(Encounter.total_num_simulations))
 
+        for combatant in self.party + self.monsters:
+            combatant._num_incarnated = 0
+
         party = [character.incarnate() 
             for character in self.party for _ in range(character._quantity) ]
         monsters = [monster.incarnate() 

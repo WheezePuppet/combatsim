@@ -47,7 +47,6 @@ class Combatant():
         type of combatant to actually incarnate when a battle happens.'''
         self._quantity = quantity
 
-        self.incarnate()
 
 
     def incarnate(self):
@@ -59,6 +58,9 @@ class Combatant():
         '''Assign a fresh id to this newly minted Combatant.'''
         incarnated._id = Combatant.combatant_id
         Combatant.combatant_id += 1
+
+        self._num_incarnated = (self._num_incarnated + 1
+            if hasattr(self, '_num_incarnated') else 1)
 
         '''(Re-)roll all the instance-specific parameters for this object, so
         that a fresh incarnation of this type of adventurer/monster exists.'''
@@ -75,7 +77,11 @@ class Combatant():
         self.stats[key] = value
 
     def __str__(self):
-        return self.name + str(self._id)
+        if hasattr(self, '_id'):
+            return self.name + str(self._id) 
+        else:
+            return (str(self._num_incarnated) + ' ' + self.name +
+                ('' if self._num_incarnated == 1 else 's'))
 
     def __repr__(self):
         return 'Combatant({})'.format(self.stats)
