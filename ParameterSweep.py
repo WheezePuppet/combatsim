@@ -59,43 +59,59 @@ class ParameterSweep():
                             'combatant','param','value','party_win_freq'])
 
         for combatant, params in self._sweep_params.items():
+            #import ipdb; ipdb.set_trace()
             for param, vals in params.items():
-                for val in vals:
-                    if type(combatant) is tuple:
-                        for c in combatant:
-                            c.set_stat(param, val)
-                    else:
-                        combatant.set_stat(param, val)
-                    log_meta_detail(' ...running suite for {!s}.{!s}={!s}...'.
-                        format(combatant, param, val))
-                    suite = Suite(self._encounter, suite_size)
-                    these_results = suite.execute()
-                    party_wins = [r.party_remaining > r.monsters_remaining
-                            for r in these_results]
-                    party_win_freq = sum(party_wins)/len(party_wins)
-                    results = results.append(pd.DataFrame.from_records([{
-                        'combatant':prstr(combatant),
-                        'param':param,
-                        'value':val,
-                        'party_win_freq':party_win_freq}]))
+                # Yep, it's a hack. Treat the "quantity" parameter
+                # differently; it's not an attribute of a Combatant, but
+                # rather controls the number of such Combatants.
+                if param == 'quantity':
+                    quantities = [int(v) for v in build_pv_list(vals)]
+                    for quantity in quantities:
+                        # Dude this is harder....
+                        pass
+                    combatant.quantity = 1
+                else:
+                    for val in vals:
+                        if type(combatant) is tuple:
+                            import sys ; sys.exit(1)
+                            for c in combatant:
+                                c.set_stat(param, val)
+                        else:
+                            combatant.set_stat(param, val)
+                        suite = Suite(self._encounter, suite_size)
+                        these_results = suite.execute()
+                        party_wins = [r.party_remaining > r.monsters_remaining
+                                for r in these_results]
+                        party_win_freq = sum(party_wins)/len(party_wins)
+                        results = results.append(pd.DataFrame.from_records([{
+                            'combatant':prstr(combatant),
+                            'param':param,
+                            'value':val,
+                            'party_win_freq':party_win_freq}]))
         return results[['combatant','param','value','party_win_freq']]
 
 
 def instantiate_group(lines):
-    group = []
+    group = {}
     sweep_params = {}
-    for combatant in lines:
-        combatant_parts = combatant.split(',')
-        these_combatants = [
-            Combatant.from_filename(combatant_parts[0])
-                for _ in range(int(combatant_parts[1]))]
-        group.extend(these_combatants)
+    for combatant_line in lines:
+        combatant_parts = combatant_line.split(',')
+        this_combatant = Combatant.from_filename(combatant_parts[0])
+        try:
+            # Non-variable quantity; e.g., 65 kobolds.
+            quantity = int(combatant_parts[1])
+        except ValueError:
+            # Variable quantity; e.g., (1-7) kobolds.
+            quantity = 'variable'
+            sweep_params.update(
+                { this_combatant : { 'quantity':combatant_parts[1] } })
+        group.update({ this_combatant : quantity})
         if len(combatant_parts) > 2:
             for param in combatant_parts[2:]:
                 param_parts = param.split(':')
                 sweep_params.update(
-                    {tuple(c for c in these_combatants):{
-                    param_parts[0]:build_pv_list(param_parts[1])}})
+                    { this_combatant :
+                        {param_parts[0]:build_pv_list(param_parts[1])}})
     return group, sweep_params
 
 
