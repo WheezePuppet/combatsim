@@ -27,8 +27,8 @@ def run_sample_suite(size=10,
     party_size=2,
     num_monsters=3):
 
-    party = [Combatant.from_filename('commoner') for _ in range(party_size)]
-    monsters = [Combatant.from_filename('kobold') for _ in range(num_monsters)]
+    party = {Combatant.from_filename('commoner'):party_size}
+    monsters = {Combatant.from_filename('kobold'):num_monsters}
     encounter = Encounter(party, monsters)
 
     results = Suite(encounter,size).execute()
