@@ -58,6 +58,9 @@ class Combatant():
         incarnated._id = Combatant.combatant_id
         Combatant.combatant_id += 1
 
+        self._num_incarnated = (self._num_incarnated + 1
+            if hasattr(self, '_num_incarnated') else 1)
+
         '''(Re-)roll all the instance-specific parameters for this object, so
         that a fresh incarnation of this type of adventurer/monster exists.'''
         log_incarnate("------> incarnating {}...".format(str(incarnated)))
@@ -67,13 +70,18 @@ class Combatant():
                 log_incarnate("  {}'s {}, rolled from {}, is a: {}".format(
                     str(incarnated), stat, val, new_value))
                 setattr(incarnated, stat, roll(val))
+
         return incarnated
 
     def set_stat(self, key, value):
         self.stats[key] = value
 
     def __str__(self):
-        return self.name + str(self._id)
+        if hasattr(self, '_id'):
+            return self.name + str(self._id) 
+        else:
+            return (str(self._num_incarnated) + ' ' + self.name +
+                ('' if self._num_incarnated == 1 else 's'))
 
     def __repr__(self):
         return 'Combatant({})'.format(self.stats)

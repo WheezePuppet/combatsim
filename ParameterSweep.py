@@ -9,23 +9,19 @@ from Encounter import Encounter
 from SimCombat import *
 
 class ParameterSweep():
-
     '''Simulate an encounter while varying some number of parameters within a
     range of values, and compute aggregate results. Each set of parameter
     values will be executed as a suite (i.e., multiple times.)'''
 
     def __init__(self, encounter, sweep_params):
-
         '''"encounter" is the generic type of Encounter (i.e., two sets of
         Combatant objects for the party and the monsters) to be simulated.
         "sweep_params" is a dictionary whose keys are Combatants and whose
         values are dictionaries; these dictionaries' keys are attributes of
         the Combatant in question and values are lists of values to set each
         attribute to.'''
-
         self._encounter = encounter
         self._sweep_params = sweep_params
-
 
     @classmethod
     def from_filename(self, filename):
@@ -66,7 +62,8 @@ class ParameterSweep():
             for param, vals in params.items():
                 for val in vals:
                     if type(combatant) is tuple:
-                        [c.set_stat(param, val) for c in combatant]
+                        for c in combatant:
+                            c.set_stat(param, val)
                     else:
                         combatant.set_stat(param, val)
                     log_meta_detail(' ...running suite for {!s}.{!s}={!s}...'.
@@ -114,17 +111,14 @@ def build_pv_list(string):
     return [ prefix + str(k) for k in range(first_num,last_num+1) ]
 
 
-def run_sample_sweep(suite_size=10):
+def run_sample_sweep(suite_size=10, party_size=2, num_monsters=3):
 
-    party = [Combatant.from_filename('commoner') for _ in range(3)]
-    monsters = [Combatant.from_filename('kobold') for _ in range(4)]
+    party = {Combatant.from_filename('commoner'):party_size}
+    monsters = {Combatant.from_filename('kobold'):num_monsters}
     encounter = Encounter(party, monsters)
 
-    commoner1 = party[0]
-    commoner2 = party[1]
-
     sweep_params = {
-        (commoner1,commoner2):{'hp': ['d6+'+str(mod) for mod in range(0,80)]}}
+        tuple(party.keys()):{'hp': ['d6+'+str(mod) for mod in range(0,8)]}}
 
     return ParameterSweep(encounter, sweep_params).execute(suite_size)
 
