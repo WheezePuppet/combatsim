@@ -83,8 +83,8 @@ class ParameterSweep():
 def instantiate_group(lines):
     group = []
     sweep_params = {}
-    for combatant in lines:
-        combatant_parts = combatant.split(',')
+    for combatant_line in lines:
+        combatant_parts = combatant_line.split(',')
         try:
             this_combatant = Combatant.from_filename(combatant_parts[0],
                 int(combatant_parts[1]))
