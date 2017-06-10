@@ -2,6 +2,7 @@
 from random import randint
 import pandas as pd
 import re
+from collections import defaultdict
 
 from Suite import Suite
 from Combatant import Combatant
@@ -82,7 +83,7 @@ class ParameterSweep():
 
 def instantiate_group(lines):
     group = []
-    sweep_params = {}
+    sweep_params = defaultdict(dict)
     for combatant_line in lines:
         combatant_parts = combatant_line.split(',')
         try:
@@ -90,16 +91,23 @@ def instantiate_group(lines):
                 int(combatant_parts[1]))
         except ValueError:
             this_combatant = Combatant.from_filename(combatant_parts[0])
-            sweep_params.update(
-                { this_combatant : {
-                    'quantity': [int(t) for t in build_pv_list(combatant_parts[1])]}})
+            sweep_params[this_combatant].update({
+                'quantity':
+                    [int(t) for t in build_pv_list(combatant_parts[1])]})
         group.append(this_combatant)
         if len(combatant_parts) > 2:
             for param in combatant_parts[2:]:
                 param_parts = param.split(':')
-                sweep_params.update(
-                    { this_combatant : {
-                        param_parts[0]:build_pv_list(param_parts[1])}})
+                pv_list = build_pv_list(param_parts[1])
+                if (len(pv_list) == 1):
+                    # This isn't actually a sweep parameter; it's a constant.
+                    # Ex: hp:d12+3
+                    this_combatant.set_stat(param_parts[0],pv_list[0])
+                else:
+                    # This is a sweep parameter; add to sweep_params dict.
+                    # Ex: hp:d12+(1-5)
+                    sweep_params[this_combatant].update({
+                        param_parts[0]:build_pv_list(param_parts[1])})
     return group, sweep_params
 
 
