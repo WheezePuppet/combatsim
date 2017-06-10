@@ -21,7 +21,7 @@ class Encounter():
 
         Combatant.reset_ids()
         Encounter.total_num_simulations += 1
-        log_meta('Starting sim #{}...'.
+        log_meta_detail('Starting sim #{}...'.
                                 format(Encounter.total_num_simulations))
 
         for combatant in self.party + self.monsters:
@@ -49,7 +49,7 @@ class Encounter():
                 character.take_action(other_party, monsters)
                 monsters = [m for m in monsters if not m.is_dead()]
                 if len(monsters) == 0:
-                    log_meta('*** Party wins! :)')
+                    log_meta_detail('*** Party wins! :)')
                     return EncounterResults(len(party),len(monsters))
             elif character in monsters:
                 other_monsters = monsters.copy()
@@ -57,7 +57,7 @@ class Encounter():
                 character.take_action(other_monsters, party)
                 party = [c for c in party if not c.is_dead()]
                 if len(party) == 0:
-                    log_meta('*** Monsters win! :(')
+                    log_meta_detail('*** Monsters win! :(')
                     return EncounterResults(len(party),len(monsters))
             else:
                 print('{} not in either!'.format(str(character)))
