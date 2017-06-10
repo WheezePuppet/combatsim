@@ -50,9 +50,10 @@ class Combatant():
 
     def incarnate(self):
         '''Produce a clone of this object, with all individual stats rolled
-        for it, to actually participate in a combat.'''
-
-        incarnated = copy.deepcopy(self)
+        for it, to actually participate in a combat.
+        (This will need to be a deepcopy if we ever change individual-based
+        things in the stats dict.)'''
+        incarnated = copy.copy(self)
 
         '''Assign a fresh id to this newly minted Combatant.'''
         incarnated._id = Combatant.combatant_id
