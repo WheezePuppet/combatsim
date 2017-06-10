@@ -59,6 +59,7 @@ class ParameterSweep():
     def execute(self, suite_size=10):
 
         log_meta('Starting sweep...')
+        Encounter.total_num_simulations = 0
         results = pd.DataFrame(columns=[
                             'combatant','param','value','party_win_freq'])
 
