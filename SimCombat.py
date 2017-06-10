@@ -84,11 +84,19 @@ def pr(alist):
     because I'm being stupid at the moment.)'''
     print([str(i) for i in alist])
 
-def prstr(athing):
+def str_form(athing):
     '''Return the str() representation of the thing passed. If it's a tuple,
     return a string concatenating the elements. (Needed because I'm being 
     stupid at the moment.)'''
     if type(athing) is tuple:
         return '('+','.join([str(i) for i in athing])+')'
+    elif type(athing) is list:
+        return '['+','.join([str(i) for i in athing])+']'
+    elif type(athing) is dict:
+        return '{'+','.join([str(k)+":"+str(v) 
+            for k,v in athing.items()])+'}'
     else:
         return(str(athing))
+
+def prstr(athing):
+    print(str_form(athing))

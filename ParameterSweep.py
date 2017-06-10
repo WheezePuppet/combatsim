@@ -73,7 +73,7 @@ class ParameterSweep():
                             for r in these_results]
                     party_win_freq = sum(party_wins)/len(party_wins)
                     results = results.append(pd.DataFrame.from_records([{
-                        'combatant':prstr(combatant),
+                        'combatant':str_form(combatant),
                         'param':param,
                         'value':val,
                         'party_win_freq':party_win_freq}]))
