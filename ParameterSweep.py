@@ -85,8 +85,14 @@ def instantiate_group(lines):
     sweep_params = {}
     for combatant in lines:
         combatant_parts = combatant.split(',')
-        this_combatant = Combatant.from_filename(combatant_parts[0],
-            int(combatant_parts[1]))
+        try:
+            this_combatant = Combatant.from_filename(combatant_parts[0],
+                int(combatant_parts[1]))
+        except ValueError:
+            this_combatant = Combatant.from_filename(combatant_parts[0])
+            sweep_params.update(
+                { this_combatant : {
+                    'quantity': [int(t) for t in build_pv_list(combatant_parts[1])]}})
         group.append(this_combatant)
         if len(combatant_parts) > 2:
             for param in combatant_parts[2:]:

@@ -43,10 +43,9 @@ class Combatant():
         self.actions = [
             self.build_action(action) for action in self.action_strs]
 
-        '''Kind of a hack; the quantity inst var represents the number of this
-        type of combatant to actually incarnate when a battle happens.'''
-        self._quantity = quantity
-
+        '''Kind of a hack; the quantity statistic represents the number of 
+        this type of combatant to actually incarnate when a battle happens.'''
+        stats['quantity'] = quantity
 
 
     def incarnate(self):

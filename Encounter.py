@@ -27,10 +27,10 @@ class Encounter():
         for combatant in self.party + self.monsters:
             combatant._num_incarnated = 0
 
-        party = [character.incarnate() 
-            for character in self.party for _ in range(character._quantity) ]
-        monsters = [monster.incarnate() 
-            for monster in self.monsters for _ in range(monster._quantity) ]
+        party = [character.incarnate() for character in self.party 
+            for _ in range(character.stats['quantity']) ]
+        monsters = [monster.incarnate() for monster in self.monsters 
+            for _ in range(monster.stats['quantity']) ]
 
         log_meta_detail('This fight features ' + 
             ','.join([str(pm) for pm in party]) + ' vs. ' +

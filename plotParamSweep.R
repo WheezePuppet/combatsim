@@ -12,9 +12,18 @@ if (any(str_detect(r$value,"\\+"))) {
     text <- "value"
 }
 
+if (length(unique(r$combatant)) == 1) {
+    title <- paste0(r$combatant,"'s ",r$param, " ", text)
+    x.label <- paste(r$param, text)
+} else {
+    title <- paste0("Number of ", 
+        strsplit(as.character(r$combatant[1]),split=" ")[[1]][2], "s")
+    x.label <- title
+}
+
 p <- ggplot(r, aes(x=value, y=party_win_freq)) + geom_point() + geom_smooth() +
-    ggtitle(paste0(r$combatant,"'s ",r$param, " ", text))  +
-    xlab(paste(r$param, text))  +
+    ggtitle(title) +
+    xlab(x.label) +
     ylab("Party win %")  +
     ylim(c(0,1))
 
