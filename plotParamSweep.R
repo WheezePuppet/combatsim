@@ -13,7 +13,8 @@ if (any(str_detect(r$value,"\\+"))) {
 }
 
 if (length(unique(r$combatant)) == 1) {
-    title <- paste0(r$combatant,"'s ",r$param, " ", text)
+    title <- paste0(strsplit(as.character(r$combatant[1]),split=" ")[[1]][2],
+        "s' ",r$param, " ", text)
     x.label <- paste(r$param, text)
 } else {
     title <- paste0("Number of ", 
