@@ -6,7 +6,7 @@ import os
 from SimCombat import *
 from ParameterSweep import ParameterSweep
 
-if len(sys.argv) > 4:
+if len(sys.argv) > 5:
     print('Usage: main.py [sweep_file=sweep.txt] [suite_size=1] [(' +
         '|'.join(reversed(logging_levels)) +
         ')=DEBUG] [plot=False].')
@@ -42,4 +42,4 @@ with open('results.csv','w') as f:
     results.to_csv(f, index=False)
 if plot:
     os.system('Rscript plotParamSweep.R')
-    os.system('evince plot.pdf &')
+    os.system('okular --presentation plot.pdf &')
