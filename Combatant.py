@@ -79,9 +79,11 @@ class Combatant():
     def __str__(self):
         if hasattr(self, '_id'):
             return self.name + str(self._id) 
-        else:
+        elif hasattr(self, '_num_incarnated'):
             return (str(self._num_incarnated) + ' ' + self.name +
                 ('' if self._num_incarnated == 1 else 's'))
+        else:
+            return '0 ' + self.name + 's'
 
     def __repr__(self):
         return 'Combatant({})'.format(self.stats)
