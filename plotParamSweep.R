@@ -13,12 +13,18 @@ if (any(str_detect(r$value,"\\+"))) {
 }
 
 if (length(unique(r$combatant)) == 1) {
-    title <- paste0(strsplit(as.character(r$combatant[1]),split=" ")[[1]][2],
-        "s' ",r$param, " ", text)
+    
+    comb.name <- strsplit(as.character(r$combatant[nrow(r)]),split=" ")[[1]][2]
+    if (str_detect(comb.name,"s$")) {
+        comb.name <- paste0(comb.name,"'")
+    } else {
+        comb.name <- paste0(comb.name,"'s")
+    }
+    title <- paste0(comb.name, " ",r$param, " ", text)
     x.label <- paste(r$param, text)
 } else {
     title <- paste0("Number of ", 
-        strsplit(as.character(r$combatant[1]),split=" ")[[1]][2], "s")
+        strsplit(as.character(r$combatant[1]),split=" ")[[nrow(r)]][2])
     x.label <- title
 }
 
