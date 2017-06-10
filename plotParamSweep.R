@@ -24,7 +24,7 @@ if (length(unique(r$combatant)) == 1) {
     x.label <- paste(r$param, text)
 } else {
     title <- paste0("Number of ", 
-        strsplit(as.character(r$combatant[1]),split=" ")[[nrow(r)]][2])
+        strsplit(as.character(r$combatant[nrow(r)]),split=" ")[[1]][2])
     x.label <- title
 }
 
