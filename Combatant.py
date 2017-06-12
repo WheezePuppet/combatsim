@@ -83,7 +83,8 @@ class Combatant():
             return (str(self._num_incarnated) + ' ' + self.name +
                 ('' if self._num_incarnated == 1 else 's'))
         else:
-            return '0 ' + self.name + 's'
+            quantity = self.stats.get('quantity','*')
+            return str(quantity) + "->" + self.name + 's'
 
     def __repr__(self):
         return 'Combatant({})'.format(self.stats)

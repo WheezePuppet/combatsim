@@ -69,6 +69,9 @@ class Encounter():
 
         return None   # This should never happen!
 
+    def __str__(self):
+        return str_form(self.party) + " vs. " + str_form(self.monsters)
+
 
 def run_sample_encounter(party_size=2, num_monsters=3):
 
