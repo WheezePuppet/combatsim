@@ -1,5 +1,5 @@
 Party:
-commoner,3,hp:26+(1-5)
+commoner,3
 
 Monsters:
 kobold,3
